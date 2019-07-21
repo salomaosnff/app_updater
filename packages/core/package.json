@@ -1,8 +1,10 @@
 {
   "name": "@update-center/core",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "main": "dist/index.js",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
   "author": {
     "name": "Salomão Neto",

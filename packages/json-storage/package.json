@@ -1,8 +1,10 @@
 {
   "name": "@update-center/json-storage",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "main": "dist/index.js",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
   "author": {
     "name": "Salomão Neto",
@@ -12,7 +14,7 @@
     "tsc": "rimraf dist && tsc"
   },
   "dependencies": {
-    "@update-center/core": "^1.0.0",
+    "@update-center/core": "^0.1.0",
     "express": "^4.17.1",
     "multer": "^1.4.2"
   }
