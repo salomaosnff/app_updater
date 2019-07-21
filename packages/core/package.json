@@ -1,7 +1,8 @@
 {
-  "name": "@appupdater/core",
+  "name": "@update-center/core",
   "version": "1.0.0",
   "main": "dist/index.js",
+  "files": ["dist"],
   "license": "MIT",
   "scripts": {
     "tsc": "rimraf dist && tsc"

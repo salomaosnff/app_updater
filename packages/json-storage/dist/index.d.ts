@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction, Application } from 'express';
-import { Storage, AgentInfo, UpdateObject } from '@appupdater/core';
+import { Storage, AgentInfo, UpdateObject } from '@update-center/core';
 interface JsonStorageOptions {
     app: Application;
     minifyJson?: boolean;

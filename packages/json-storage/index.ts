@@ -3,7 +3,7 @@
 import { writeFile, readFile } from 'fs'
 import { Request, Response, NextFunction, Application, static as serveFiles } from 'express';
 import multer from 'multer';
-import { Storage, AgentInfo, UpdateObject, Util } from '@appupdater/core';
+import { Storage, AgentInfo, UpdateObject, Util } from '@update-center/core';
 
 const rootUrl = (req: Request) => `${req.protocol}://${req.get('host')}`
 

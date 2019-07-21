@@ -1,5 +1,5 @@
 {
-  "name": "appupdater",
+  "name": "update-center",
   "private": true,
   "scripts": {
     "serve": "ts-node ./example",

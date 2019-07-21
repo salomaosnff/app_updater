@@ -14,7 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = require("fs");
 const express_1 = require("express");
 const multer_1 = __importDefault(require("multer"));
-const core_1 = require("@appupdater/core");
+const core_1 = require("@update-center/core");
 const rootUrl = (req) => `${req.protocol}://${req.get('host')}`;
 class JsonStorage {
     constructor({ app, filename = 'bundles.json', minifyJson = false, baseUrl, filesRoute = '/bundles', uploadsDir = 'uploads' }) {
