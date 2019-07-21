@@ -17,5 +17,6 @@
     "express": "^4.17.1",
     "express-basic-auth": "^1.2.0",
     "semver": "^6.2.0"
-  }
+  },
+  "gitHead": "fb2feb38d8eace30d8a694422af3776ac671fc2a"
 }

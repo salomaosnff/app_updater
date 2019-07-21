@@ -1,6 +1,7 @@
 {
   "name": "update-center",
-  "private": true,
+  "private": false,
+  "license": "MIT",
   "scripts": {
     "serve": "ts-node ./example",
     "build": "lerna run tsc"
