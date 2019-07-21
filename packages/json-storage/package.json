@@ -4,6 +4,10 @@
   "main": "dist/index.js",
   "files": ["dist"],
   "license": "MIT",
+  "author": {
+    "name": "Salomão Neto",
+    "email": "salomaosnff@yahoo.com"
+  },
   "scripts": {
     "tsc": "rimraf dist && tsc"
   },
