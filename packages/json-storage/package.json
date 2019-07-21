@@ -1,0 +1,14 @@
+{
+  "name": "@appupdater/json-storage",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "scripts": {
+    "tsc": "rimraf dist && tsc"
+  },
+  "dependencies": {
+    "@appupdater/core": "^1.0.0",
+    "express": "^4.17.1",
+    "multer": "^1.4.2"
+  }
+}
