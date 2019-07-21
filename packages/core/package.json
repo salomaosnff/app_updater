@@ -18,5 +18,8 @@
     "express-basic-auth": "^1.2.0",
     "semver": "^6.2.0"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "gitHead": "0adebae34c5a823450797fdd059fd7344ff8cb88"
 }
