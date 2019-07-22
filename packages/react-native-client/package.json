@@ -11,11 +11,8 @@
   "homepage": "https://github.com/salomaosnff/app_updater#readme",
   "license": "MIT",
   "main": "dist/index.js",
-  "directories": {
-    "lib": "dist"
-  },
   "files": [
-    "lib"
+    "dist"
   ],
   "repository": {
     "type": "git",

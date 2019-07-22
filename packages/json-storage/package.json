@@ -2,9 +2,9 @@
   "name": "@update-center/json-storage",
   "version": "0.1.6-alpha.0",
   "main": "dist/index.js",
-  "directories": {
-    "lib": "dist"
-  },
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
   "author": {
     "name": "Salomão Neto",
