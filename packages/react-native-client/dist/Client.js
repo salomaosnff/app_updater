@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -6,11 +7,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { setActiveBundle, registerBundle, unregisterBundle, reloadBundle
-// @ts-ignore
- } from 'react-native-dynamic-bundle';
-import RnFS from 'react-native-fs';
-export class ReactNativeClient {
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_native_dynamic_bundle_1 = require("react-native-dynamic-bundle");
+const react_native_fs_1 = require("react-native-fs");
+class ReactNativeClient {
     constructor(config) {
         this.config = config;
     }
@@ -30,7 +30,7 @@ export class ReactNativeClient {
             const update = yield this.checkUpdates();
             if (update) {
                 const id = yield this.install(update);
-                yield setActiveBundle(id);
+                yield react_native_dynamic_bundle_1.setActiveBundle(id);
             }
         });
     }
@@ -38,14 +38,14 @@ export class ReactNativeClient {
         return __awaiter(this, void 0, void 0, function* () {
             const bundleId = this.generateBundleId(bundle);
             const bundlePath = yield this.download(bundle, bundleId);
-            yield registerBundle(bundleId, bundlePath);
+            yield react_native_dynamic_bundle_1.registerBundle(bundleId, bundlePath);
             return bundleId;
         });
     }
     download(bundle, id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const filename = `${RnFS.DocumentDirectoryPath}/${id}.bundle`;
-            yield RnFS.downloadFile({
+            const filename = `${react_native_fs_1.default.DocumentDirectoryPath}/${id}.bundle`;
+            yield react_native_fs_1.default.downloadFile({
                 fromUrl: bundle.bundleUrl,
                 toFile: filename
             }).promise;
@@ -76,12 +76,13 @@ export class ReactNativeClient {
     }
     uninstallByBundleId(bundleId) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield unregisterBundle(bundleId);
-            yield RnFS.unlink(`${RnFS.DocumentDirectoryPath}/${bundleId}.bundle`);
+            yield react_native_dynamic_bundle_1.unregisterBundle(bundleId);
+            yield react_native_fs_1.default.unlink(`${react_native_fs_1.default.DocumentDirectoryPath}/${bundleId}.bundle`);
         });
     }
     restart() {
-        return reloadBundle();
+        return react_native_dynamic_bundle_1.reloadBundle();
     }
 }
+exports.ReactNativeClient = ReactNativeClient;
 //# sourceMappingURL=Client.js.map
