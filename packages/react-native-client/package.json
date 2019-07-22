@@ -1,6 +1,6 @@
 {
   "name": "@update-center/react-native-client",
-  "version": "0.1.8-alpha.2",
+  "version": "0.1.8-alpha.3",
   "description": "React Native Update Center Client",
   "keywords": [
     "react-native",
@@ -26,7 +26,7 @@
     "url": "https://github.com/salomaosnff/app_updater/issues"
   },
   "dependencies": {
-    "@update-center/core": "^0.1.7-alpha.0",
+    "@update-center/core": "^0.1.8-alpha.3",
     "react-native-dynamic-bundle": "https://github.com/mauritsd/react-native-dynamic-bundle.git",
     "react-native-fs": "^2.13.3",
     "styled-components": "^4.3.2"
