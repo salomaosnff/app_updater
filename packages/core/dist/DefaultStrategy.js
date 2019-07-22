@@ -23,6 +23,7 @@ class DefaultStrategy {
     getAgentInfo(req) {
         return __awaiter(this, void 0, void 0, function* () {
             const engines = {};
+            // @ts-ignore
             for (let h in req.headers) {
                 if (!h.startsWith('x-app-engine-'))
                     continue;

@@ -2990,7 +2990,7 @@ lcid@^2.0.0:
   dependencies:
     invert-kv "^2.0.0"
 
-lerna@^3.15.0:
+lerna@^3.16.1:
   version "3.16.1"
   resolved "https://registry.yarnpkg.com/lerna/-/lerna-3.16.1.tgz#aed7811296293ae1330cab47cac4e786319f4d59"
   integrity sha512-MjVOWbSq5GABjfSG4q4wTw2eOTTFR5pwNmbDioI3nmrGsXI/kzzo3iRPTJlqL1klL+7O6s3lio7838vsPz9Iew==

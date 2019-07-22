@@ -1,7 +1,7 @@
 import * as Express from 'express';
-import { Guard } from './Guard.interface';
-import { Strategy } from './Strategy.interface';
-import { Storage } from './Storage.interface';
+import { Guard } from './interfaces/Guard.interface';
+import { Strategy } from './interfaces/Strategy.interface';
+import { Storage } from './interfaces/Storage.interface';
 export interface ApplicationOptions {
     guards: Guard[];
     strategy?: Strategy;

@@ -1,6 +1,6 @@
 import { RequestHandler, Request } from "express"
 import BasicAuth, { safeCompare, AsyncAuthorizer, Authorizer, ValueOrFunction } from "express-basic-auth"
-import { Guard, GuardScope } from "./Guard.interface";
+import { Guard, GuardScope } from "./interfaces/Guard.interface";
 
 export interface BasicGuardOptions {
     scope           ?: GuardScope[],

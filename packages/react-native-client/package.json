@@ -1,0 +1,48 @@
+{
+  "name": "@update-center/react-native-client",
+  "version": "0.1.4",
+  "description": "React Native Update Center Client",
+  "keywords": [
+    "react-native",
+    "updater",
+    "app-updater"
+  ],
+  "author": "Salomão Neto <salomaosnff@yahoo.com>",
+  "homepage": "https://github.com/salomaosnff/app_updater#readme",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "directories": {
+    "lib": "dist"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/salomaosnff/app_updater.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "tsc": "rimraf dist && tsc"
+  },
+  "bugs": {
+    "url": "https://github.com/salomaosnff/app_updater/issues"
+  },
+  "dependencies": {
+    "@update-center/core": "^0.1.4",
+    "react-native-dynamic-bundle": "https://github.com/mauritsd/react-native-dynamic-bundle.git",
+    "react-native-fs": "^2.13.3",
+    "styled-components": "^4.3.2"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
+  "devDependencies": {
+    "@types/react-native": "^0.60.2",
+    "tslint": "^5.18.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-eslint-rules": "^5.4.0",
+    "tslint-react": "^4.0.0"
+  }
+}

@@ -1,5 +1,5 @@
 import { Request } from "express"
-import { Strategy, AgentInfo, UpdateObject } from "./Strategy.interface"
+import { Strategy, AgentInfo, UpdateObject } from "./interfaces/Strategy.interface"
 
 export class DefaultStrategy implements Strategy {
     async getBundleInfo(req: Request): Promise<UpdateObject> {
@@ -15,6 +15,7 @@ export class DefaultStrategy implements Strategy {
     async getAgentInfo(req: Request): Promise<AgentInfo> {
         const engines: { [key: string]: string } = {}
 
+        // @ts-ignore
         for (let h in req.headers) {
             if (!h.startsWith('x-app-engine-')) continue
             const engineName = h.replace('x-app-engine-', '')

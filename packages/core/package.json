@@ -2,9 +2,9 @@
   "name": "@update-center/core",
   "version": "0.1.4",
   "main": "dist/index.js",
-  "files": [
-    "dist"
-  ],
+  "directories": {
+    "lib": "dist"
+  },
   "license": "MIT",
   "author": {
     "name": "Salomão Neto",
