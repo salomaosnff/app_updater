@@ -30,6 +30,7 @@ export declare type UpdatesConfig = {
     ios?: UpdatesConfigPlatform;
 };
 export declare class UpdateCenterUI extends Component<ClientUIProps, ClientUIState> {
+    state: ClientUIState;
     private static _ref;
     static client: UpdateCenterClient;
     static readonly instance: UpdateCenterUI;

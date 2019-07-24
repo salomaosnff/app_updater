@@ -10,8 +10,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = require("react");
 const react_native_1 = require("react-native");
+const common_1 = require("@update-center/common");
 const Client_1 = require("./Client");
 class UpdateCenterUI extends react_1.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            checkUpdatesVisible: false,
+            updateAvailableVisible: false,
+            downloadingVisible: false,
+            noUpdatesAvailableVisible: false,
+            restartNowVisible: false,
+            errorVisible: false,
+            currentProgress: 0,
+            currentUpdate: null,
+            error: null,
+        };
+        if (UpdateCenterUI.client) {
+            console.warn(`Update Client not configured! Call ${this.constructor.name}.configure().`);
+        }
+    }
     static get instance() {
         return this._ref.current;
     }
@@ -26,18 +44,12 @@ class UpdateCenterUI extends react_1.Component {
         this.client = new Client_1.UpdateCenterClient(config);
         return this;
     }
-    constructor(props) {
-        super(props);
-        if (UpdateCenterUI.client) {
-            console.warn(`Update Client not configured! Call ${this.constructor.name}.configure().`);
-        }
-    }
     checkUpdates(dialog = true) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.setState({
-                checkUpdatesVisible: dialog
-            });
             try {
+                this.setState({
+                    checkUpdatesVisible: dialog
+                });
                 const update = yield UpdateCenterUI.client.checkUpdates();
                 this.setState({
                     checkUpdatesVisible: false,
@@ -52,7 +64,7 @@ class UpdateCenterUI extends react_1.Component {
                     updateAvailableVisible: false,
                     noUpdatesAvailableVisible: false,
                     currentUpdate: null,
-                    error: err,
+                    error: new common_1.UpdateError('Failed to check for updates', 'CHECKUPDATES_FAIL', err),
                     errorVisible: true
                 });
             }
@@ -60,29 +72,50 @@ class UpdateCenterUI extends react_1.Component {
     }
     installUpdates(dialog = true) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.setState({
-                downloadingVisible: dialog
-            });
-            yield UpdateCenterUI.client.install(this.state.currentUpdate, p => {
+            try {
                 this.setState({
-                    currentProgress: p.bytesWritten / p.contentLength
+                    downloadingVisible: dialog
                 });
-            });
-            this.setState({
-                downloadingVisible: false,
-                currentUpdate: null,
-                updateAvailableVisible: false,
-                restartNowVisible: dialog
-            });
+                yield UpdateCenterUI.client.install(this.state.currentUpdate, p => {
+                    this.setState({
+                        currentProgress: p.bytesWritten / p.contentLength
+                    });
+                });
+                this.setState({
+                    downloadingVisible: false,
+                    currentUpdate: null,
+                    updateAvailableVisible: false,
+                    restartNowVisible: dialog
+                });
+            }
+            catch (error) {
+                this.setState({
+                    downloadingVisible: false,
+                    currentUpdate: null,
+                    updateAvailableVisible: false,
+                    restartNowVisible: false,
+                    error: new common_1.UpdateError('Failed to install updates', 'INSTALL_FAILED', error),
+                    errorVisible: true
+                });
+            }
         });
     }
     restart(force = true) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!force)
-                return UpdateCenterUI.client.restart();
-            this.setState({
-                restartNowVisible: true
-            });
+            try {
+                if (!force)
+                    return UpdateCenterUI.client.restart();
+                this.setState({
+                    restartNowVisible: true
+                });
+            }
+            catch (error) {
+                this.setState({
+                    restartNowVisible: false,
+                    error: new common_1.UpdateError('Failed to install updates', 'RESTART_FAILED', error),
+                    errorVisible: true
+                });
+            }
         });
     }
     render() {

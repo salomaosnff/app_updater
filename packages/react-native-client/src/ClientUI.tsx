@@ -59,6 +59,17 @@ export type UpdatesConfig = {
 }
 
 export class UpdateCenterUI extends Component<ClientUIProps, ClientUIState> {
+  state: ClientUIState = {
+    checkUpdatesVisible: false,
+    updateAvailableVisible: false,
+    downloadingVisible: false,
+    noUpdatesAvailableVisible: false,
+    restartNowVisible: false,
+    errorVisible: false,
+    currentProgress: 0,
+    currentUpdate: null,
+    error: null,
+  }
   private static _ref: React.RefObject<UpdateCenterUI>;
   static client: UpdateCenterClient;
 
