@@ -121,43 +121,44 @@ class UpdateCenterUI extends react_1.Component {
     render() {
         const { children, renderCheckUpdates, renderDownloading, renderError, renderRestartNow, renderUpdateAvailable, renderNoUpdateAvailable } = this.props;
         const { checkUpdatesVisible, downloadingVisible, currentUpdate, currentProgress, errorVisible, error, restartNowVisible, updateAvailableVisible, noUpdatesAvailableVisible } = this.state;
-        return (react_1.default.createElement(react_1.Fragment, null,
-            children,
-            renderCheckUpdates(checkUpdatesVisible, () => {
-                this.setState({
-                    checkUpdatesVisible: false
-                });
-            }),
-            renderDownloading(downloadingVisible, () => {
-                this.setState({
-                    downloadingVisible: false
-                });
-            }, currentUpdate, currentProgress),
-            renderError(errorVisible, () => {
-                this.setState({
-                    errorVisible: false
-                });
-            }, error, currentUpdate),
-            renderRestartNow(restartNowVisible, () => {
-                this.setState({
-                    restartNowVisible: false
-                });
-            }, () => this.restart(true), currentUpdate),
-            renderUpdateAvailable(updateAvailableVisible, () => {
-                this.setState({
-                    updateAvailableVisible: false
-                });
-            }, () => this.installUpdates(), currentUpdate),
-            renderNoUpdateAvailable(noUpdatesAvailableVisible, () => {
-                this.setState({
-                    noUpdatesAvailableVisible: false
-                });
-            }),
-            renderError(errorVisible, () => {
-                this.setState({
-                    errorVisible: false
-                });
-            }, error)));
+        return (<react_1.Fragment>
+        {children}
+        {renderCheckUpdates(checkUpdatesVisible, () => {
+            this.setState({
+                checkUpdatesVisible: false
+            });
+        })}
+        {renderDownloading(downloadingVisible, () => {
+            this.setState({
+                downloadingVisible: false
+            });
+        }, currentUpdate, currentProgress)}
+        {renderError(errorVisible, () => {
+            this.setState({
+                errorVisible: false
+            });
+        }, error, currentUpdate)}
+        {renderRestartNow(restartNowVisible, () => {
+            this.setState({
+                restartNowVisible: false
+            });
+        }, () => this.restart(true), currentUpdate)}
+        {renderUpdateAvailable(updateAvailableVisible, () => {
+            this.setState({
+                updateAvailableVisible: false
+            });
+        }, () => this.installUpdates(), currentUpdate)}
+        {renderNoUpdateAvailable(noUpdatesAvailableVisible, () => {
+            this.setState({
+                noUpdatesAvailableVisible: false
+            });
+        })}
+        {renderError(errorVisible, () => {
+            this.setState({
+                errorVisible: false
+            });
+        }, error)}
+      </react_1.Fragment>);
     }
 }
 exports.UpdateCenterUI = UpdateCenterUI;
