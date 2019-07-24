@@ -1,6 +1,6 @@
 {
   "name": "@update-center/common",
-  "version": "0.1.8",
+  "version": "0.1.10",
   "main": "dist/index.js",
   "files": [
     "dist"
