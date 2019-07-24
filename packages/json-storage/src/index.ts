@@ -72,7 +72,7 @@ export default class JsonStorage implements Storage {
             readFile(this._filename, { encoding: 'utf8' }, (err, str: string) => {
                 if (err) return reject(err)
 
-                const json: UpdateObject[] = JSON.parse(str || "[]")
+                const json: UpdateObject[] = str ? JSON.parse(str) : []
                 const result = json.find((item) => {
                     return item.name === agent.name &&
                         item.platform === agent.platform &&

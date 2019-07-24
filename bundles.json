@@ -1,0 +1,10 @@
+[
+  {
+    "platform": "android",
+    "version": "2.5",
+    "versionCode": 50,
+    "name": "gpmobile",
+    "appVersion": "1.0",
+    "bundleUrl": "http://localhost:5858/bundles/2711bcc3c0e4b9cef9f6c897e70f0272"
+  }
+]

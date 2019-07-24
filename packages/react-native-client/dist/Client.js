@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_native_dynamic_bundle_1 = require("react-native-dynamic-bundle");
 const react_native_fs_1 = require("react-native-fs");
-class ReactNativeClient {
+class UpdateCenterClient {
     constructor(config) {
         this.config = config;
     }
@@ -34,12 +34,19 @@ class ReactNativeClient {
             }
         });
     }
-    install(bundle) {
+    install(bundle, onProgress) {
         return __awaiter(this, void 0, void 0, function* () {
             const bundleId = this.generateBundleId(bundle);
             const bundlePath = yield this.download(bundle, bundleId);
             yield react_native_dynamic_bundle_1.registerBundle(bundleId, bundlePath);
             return bundleId;
+        });
+    }
+    activate(bundleId, restart = false) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield react_native_dynamic_bundle_1.setActiveBundle(bundleId);
+            if (restart)
+                return this.restart();
         });
     }
     download(bundle, id) {
@@ -58,14 +65,14 @@ class ReactNativeClient {
     checkUpdatesInRepo(repo) {
         const { agent } = this.config;
         return fetch(repo.url, {
-            method: 'GET',
+            method: "GET",
             // @ts-ignore
             headers: {
-                'x-app-bundle-name': agent.name,
-                'x-app-bundle-version': agent.version,
-                'x-app-platform': agent.platform,
-                'x-app-version': agent.appVersion,
-                'x-app-version-code': agent.versionCode
+                "x-app-bundle-name": agent.name,
+                "x-app-bundle-version": agent.version,
+                "x-app-platform": agent.platform,
+                "x-app-version": agent.appVersion,
+                "x-app-version-code": agent.versionCode
             }
         }).then((r) => r.json());
     }
@@ -84,5 +91,5 @@ class ReactNativeClient {
         return react_native_dynamic_bundle_1.reloadBundle();
     }
 }
-exports.ReactNativeClient = ReactNativeClient;
+exports.UpdateCenterClient = UpdateCenterClient;
 //# sourceMappingURL=Client.js.map

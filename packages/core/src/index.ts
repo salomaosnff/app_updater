@@ -1,3 +1,5 @@
 export * from './interfaces'
-export * from './Util'
 export * from './Application'
+export * from './BasicGuard'
+export * from './DefaultStrategy'
+export * from './Util'

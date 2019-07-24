@@ -53,7 +53,7 @@ class JsonStorage {
             fs_1.readFile(this._filename, { encoding: 'utf8' }, (err, str) => {
                 if (err)
                     return reject(err);
-                const json = JSON.parse(str || "[]");
+                const json = str ? JSON.parse(str) : [];
                 const result = json.find((item) => {
                     return item.name === agent.name &&
                         item.platform === agent.platform &&

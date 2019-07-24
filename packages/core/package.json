@@ -14,9 +14,9 @@
     "tsc": "rimraf dist && tsc"
   },
   "dependencies": {
+    "@update-center/common": "^0.1.8-alpha.3",
     "express": "^4.17.1",
-    "express-basic-auth": "^1.2.0",
-    "semver": "^6.2.0"
+    "express-basic-auth": "^1.2.0"
   },
   "publishConfig": {
     "access": "public"
