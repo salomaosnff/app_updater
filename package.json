@@ -21,6 +21,7 @@
     "typescript": "^3.5.3"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "react": "^16.2.0"
   }
 }

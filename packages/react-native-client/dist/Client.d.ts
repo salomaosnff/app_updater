@@ -6,10 +6,10 @@ export declare class UpdateCenterClient implements IUpdateCenterClient {
     constructor(config: UpdateCenterClientConfig);
     checkUpdates(): Promise<UpdateObject>;
     update(): Promise<any>;
-    install(bundle: UpdateObject, onProgress?: ProgressFuncion): Promise<any>;
+    install(bundle: UpdateObject, forceRestart?: boolean, onProgress?: ProgressFuncion): Promise<any>;
     activate(bundleId: string, restart?: boolean): Promise<any>;
-    download(bundle: UpdateObject, id?: string): Promise<string>;
-    generateBundleId({ name, appVersion, version, platform }: UpdateObject): string;
+    download(bundle: UpdateObject, id?: string, onProgress?: ProgressFuncion): Promise<string>;
+    generateBundleId({ name, version, platform, versionCode }: UpdateObject): string;
     checkUpdatesInRepo(repo: UpdateCenterRepository): Promise<UpdateObject>;
     uninstall(bundle: UpdateObject): Promise<void>;
     uninstallByBundleId(bundleId: string): Promise<void>;

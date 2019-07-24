@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -7,12 +6,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-const react_1 = require("react");
-const react_native_1 = require("react-native");
-const common_1 = require("@update-center/common");
-const Client_1 = require("./Client");
-class UpdateCenterUI extends react_1.Component {
+import React from 'react';
+import { Platform } from "react-native";
+import { UpdateError } from "@update-center/common";
+import { UpdateCenterClient } from "./Client";
+export class UpdateCenterUI extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -26,7 +24,7 @@ class UpdateCenterUI extends react_1.Component {
             currentUpdate: null,
             error: null,
         };
-        if (UpdateCenterUI.client) {
+        if (!UpdateCenterUI.client) {
             console.warn(`Update Client not configured! Call ${this.constructor.name}.configure().`);
         }
     }
@@ -35,20 +33,21 @@ class UpdateCenterUI extends react_1.Component {
     }
     static configure(updatesConfig) {
         const { repositories = [], android, ios } = updatesConfig;
-        const platformRespositories = react_native_1.Platform.select({
+        const platformRespositories = Platform.select({
             android: (android && android.repositories) || [],
             ios: (android && ios.repositories) || [],
             default: []
         });
-        const config = Object.assign({}, react_native_1.Platform.select({ android, ios }), { repositories: platformRespositories.concat(repositories) });
-        this.client = new Client_1.UpdateCenterClient(config);
-        return this;
+        const config = Object.assign({}, Platform.select({ android, ios }), { repositories: platformRespositories.concat(repositories) });
+        UpdateCenterUI.client = new UpdateCenterClient(config);
     }
     checkUpdates(dialog = true) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 this.setState({
-                    checkUpdatesVisible: dialog
+                    checkUpdatesVisible: dialog,
+                    error: null,
+                    errorVisible: false
                 });
                 const update = yield UpdateCenterUI.client.checkUpdates();
                 this.setState({
@@ -58,25 +57,27 @@ class UpdateCenterUI extends react_1.Component {
                     currentUpdate: update
                 });
             }
-            catch (err) {
+            catch (error) {
+                if (!(error instanceof UpdateError))
+                    error = new UpdateError(error, 'CHECKUPDATES_FAIL');
                 this.setState({
                     checkUpdatesVisible: false,
                     updateAvailableVisible: false,
                     noUpdatesAvailableVisible: false,
                     currentUpdate: null,
-                    error: new common_1.UpdateError('Failed to check for updates', 'CHECKUPDATES_FAIL', err),
+                    error,
                     errorVisible: true
                 });
             }
         });
     }
-    installUpdates(dialog = true) {
+    installUpdates(dialog = true, forceRestart = false) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 this.setState({
                     downloadingVisible: dialog
                 });
-                yield UpdateCenterUI.client.install(this.state.currentUpdate, p => {
+                yield UpdateCenterUI.client.install(this.state.currentUpdate, forceRestart, p => {
                     this.setState({
                         currentProgress: p.bytesWritten / p.contentLength
                     });
@@ -89,12 +90,14 @@ class UpdateCenterUI extends react_1.Component {
                 });
             }
             catch (error) {
+                if (!(error instanceof UpdateError))
+                    error = new UpdateError(error, 'INSTALL_FAILED');
                 this.setState({
                     downloadingVisible: false,
                     currentUpdate: null,
                     updateAvailableVisible: false,
                     restartNowVisible: false,
-                    error: new common_1.UpdateError('Failed to install updates', 'INSTALL_FAILED', error),
+                    error,
                     errorVisible: true
                 });
             }
@@ -103,16 +106,18 @@ class UpdateCenterUI extends react_1.Component {
     restart(force = true) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                if (!force)
+                if (force)
                     return UpdateCenterUI.client.restart();
                 this.setState({
                     restartNowVisible: true
                 });
             }
             catch (error) {
+                if (!(error instanceof UpdateError))
+                    error = new UpdateError(error, 'RESTART_FAILED');
                 this.setState({
                     restartNowVisible: false,
-                    error: new common_1.UpdateError('Failed to install updates', 'RESTART_FAILED', error),
+                    error,
                     errorVisible: true
                 });
             }
@@ -121,45 +126,44 @@ class UpdateCenterUI extends react_1.Component {
     render() {
         const { children, renderCheckUpdates, renderDownloading, renderError, renderRestartNow, renderUpdateAvailable, renderNoUpdateAvailable } = this.props;
         const { checkUpdatesVisible, downloadingVisible, currentUpdate, currentProgress, errorVisible, error, restartNowVisible, updateAvailableVisible, noUpdatesAvailableVisible } = this.state;
-        return (<react_1.Fragment>
+        return (<React.Fragment>
         {children}
-        {renderCheckUpdates(checkUpdatesVisible, () => {
+        {renderCheckUpdates && renderCheckUpdates(checkUpdatesVisible, () => {
             this.setState({
                 checkUpdatesVisible: false
             });
         })}
-        {renderDownloading(downloadingVisible, () => {
+        {renderDownloading && renderDownloading(downloadingVisible, () => {
             this.setState({
                 downloadingVisible: false
             });
         }, currentUpdate, currentProgress)}
-        {renderError(errorVisible, () => {
+        {renderError && renderError(errorVisible, () => {
             this.setState({
                 errorVisible: false
             });
         }, error, currentUpdate)}
-        {renderRestartNow(restartNowVisible, () => {
+        {renderRestartNow && renderRestartNow(restartNowVisible, () => {
             this.setState({
                 restartNowVisible: false
             });
         }, () => this.restart(true), currentUpdate)}
-        {renderUpdateAvailable(updateAvailableVisible, () => {
+        {renderUpdateAvailable && renderUpdateAvailable(updateAvailableVisible, () => {
             this.setState({
                 updateAvailableVisible: false
             });
         }, () => this.installUpdates(), currentUpdate)}
-        {renderNoUpdateAvailable(noUpdatesAvailableVisible, () => {
+        {renderNoUpdateAvailable && renderNoUpdateAvailable(noUpdatesAvailableVisible, () => {
             this.setState({
                 noUpdatesAvailableVisible: false
             });
         })}
-        {renderError(errorVisible, () => {
+        {renderError && renderError(errorVisible, () => {
             this.setState({
                 errorVisible: false
             });
         }, error)}
-      </react_1.Fragment>);
+      </React.Fragment>);
     }
 }
-exports.UpdateCenterUI = UpdateCenterUI;
 //# sourceMappingURL=ClientUI.js.map

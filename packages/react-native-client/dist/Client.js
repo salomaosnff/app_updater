@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -7,10 +6,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-const react_native_dynamic_bundle_1 = require("react-native-dynamic-bundle");
-const react_native_fs_1 = require("react-native-fs");
-class UpdateCenterClient {
+import { UpdateError } from "@update-center/common";
+import { setActiveBundle, registerBundle, unregisterBundle, reloadBundle } from "react-native-dynamic-bundle";
+import RnFS from "react-native-fs";
+import axios from "axios";
+export class UpdateCenterClient {
     constructor(config) {
         this.config = config;
     }
@@ -30,41 +30,44 @@ class UpdateCenterClient {
             const update = yield this.checkUpdates();
             if (update) {
                 const id = yield this.install(update);
-                yield react_native_dynamic_bundle_1.setActiveBundle(id);
+                yield setActiveBundle(id);
             }
         });
     }
-    install(bundle, onProgress) {
+    install(bundle, forceRestart = false, onProgress) {
         return __awaiter(this, void 0, void 0, function* () {
             const bundleId = this.generateBundleId(bundle);
-            const bundlePath = yield this.download(bundle, bundleId);
-            yield react_native_dynamic_bundle_1.registerBundle(bundleId, bundlePath);
+            const bundlePath = yield this.download(bundle, bundleId, onProgress);
+            yield registerBundle(bundleId, bundlePath);
+            yield this.activate(bundleId, forceRestart);
             return bundleId;
         });
     }
     activate(bundleId, restart = false) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield react_native_dynamic_bundle_1.setActiveBundle(bundleId);
+            yield setActiveBundle(bundleId);
             if (restart)
                 return this.restart();
         });
     }
-    download(bundle, id) {
+    download(bundle, id, onProgress) {
         return __awaiter(this, void 0, void 0, function* () {
-            const filename = `${react_native_fs_1.default.DocumentDirectoryPath}/${id}.bundle`;
-            yield react_native_fs_1.default.downloadFile({
+            const filename = `${id}.bundle`;
+            yield RnFS.downloadFile({
                 fromUrl: bundle.bundleUrl,
-                toFile: filename
+                toFile: `${RnFS.DocumentDirectoryPath}/${filename}`,
+                progress: onProgress
             }).promise;
             return filename;
         });
     }
-    generateBundleId({ name, appVersion, version, platform }) {
-        return `${name}-${appVersion}-${version}-${platform}`;
+    generateBundleId({ name, version, platform, versionCode }) {
+        return `${name}-${version}-${versionCode}-${platform}`;
     }
     checkUpdatesInRepo(repo) {
         const { agent } = this.config;
-        return fetch(repo.url, {
+        return axios
+            .get(repo.url, {
             method: "GET",
             // @ts-ignore
             headers: {
@@ -74,7 +77,20 @@ class UpdateCenterClient {
                 "x-app-version": agent.appVersion,
                 "x-app-version-code": agent.versionCode
             }
-        }).then((r) => r.json());
+        })
+            .then((r) => r.data)
+            .catch((err) => {
+            if (!err.response) {
+                throw new UpdateError(err, 'NETWORK_ERROR');
+            }
+            if (err.code === 'ECONNABORTED') {
+                throw new UpdateError(err, 'CHECKUPDATES_TIMEOUT');
+            }
+            if ([401, 403].includes(err.response.status)) {
+                throw new UpdateError(err, 'UNAUTHORIZED');
+            }
+            throw err;
+        });
     }
     uninstall(bundle) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -83,13 +99,12 @@ class UpdateCenterClient {
     }
     uninstallByBundleId(bundleId) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield react_native_dynamic_bundle_1.unregisterBundle(bundleId);
-            yield react_native_fs_1.default.unlink(`${react_native_fs_1.default.DocumentDirectoryPath}/${bundleId}.bundle`);
+            yield unregisterBundle(bundleId);
+            yield RnFS.unlink(`${RnFS.DocumentDirectoryPath}/${bundleId}.bundle`);
         });
     }
     restart() {
-        return react_native_dynamic_bundle_1.reloadBundle();
+        return reloadBundle();
     }
 }
-exports.UpdateCenterClient = UpdateCenterClient;
 //# sourceMappingURL=Client.js.map
