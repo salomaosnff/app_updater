@@ -1,6 +1,6 @@
 {
   "name": "@update-center/core",
-  "version": "0.1.8-alpha.3",
+  "version": "0.1.8-alpha.4",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -14,7 +14,7 @@
     "tsc": "rimraf dist && tsc"
   },
   "dependencies": {
-    "@update-center/common": "^0.1.8-alpha.3",
+    "@update-center/common": "^0.1.8-alpha.4",
     "express": "^4.17.1",
     "express-basic-auth": "^1.2.0"
   },
