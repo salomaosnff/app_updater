@@ -37,12 +37,25 @@ class UpdateCenterUI extends react_1.Component {
             this.setState({
                 checkUpdatesVisible: dialog
             });
-            const update = yield UpdateCenterUI.client.checkUpdates();
-            this.setState({
-                checkUpdatesVisible: false,
-                updateAvailableVisible: !!update,
-                currentUpdate: update
-            });
+            try {
+                const update = yield UpdateCenterUI.client.checkUpdates();
+                this.setState({
+                    checkUpdatesVisible: false,
+                    updateAvailableVisible: !!update,
+                    noUpdatesAvailableVisible: !update,
+                    currentUpdate: update
+                });
+            }
+            catch (err) {
+                this.setState({
+                    checkUpdatesVisible: false,
+                    updateAvailableVisible: false,
+                    noUpdatesAvailableVisible: false,
+                    currentUpdate: null,
+                    error: err,
+                    errorVisible: true
+                });
+            }
         });
     }
     installUpdates(dialog = true) {
@@ -73,8 +86,8 @@ class UpdateCenterUI extends react_1.Component {
         });
     }
     render() {
-        const { children, renderCheckUpdates, renderDownloading, renderError, renderRestartNow, renderUpdateAvailable } = this.props;
-        const { checkUpdatesVisible, downloadingVisible, currentUpdate, currentProgress, errorVisible, error, restartNowVisible, updateAvailableVisible } = this.state;
+        const { children, renderCheckUpdates, renderDownloading, renderError, renderRestartNow, renderUpdateAvailable, renderNoUpdateAvailable } = this.props;
+        const { checkUpdatesVisible, downloadingVisible, currentUpdate, currentProgress, errorVisible, error, restartNowVisible, updateAvailableVisible, noUpdatesAvailableVisible } = this.state;
         return (react_1.default.createElement(react_1.Fragment, null,
             children,
             renderCheckUpdates(checkUpdatesVisible, () => {
@@ -96,12 +109,22 @@ class UpdateCenterUI extends react_1.Component {
                 this.setState({
                     restartNowVisible: false
                 });
-            }, currentUpdate),
+            }, () => this.restart(true), currentUpdate),
             renderUpdateAvailable(updateAvailableVisible, () => {
                 this.setState({
                     updateAvailableVisible: false
                 });
-            }, currentUpdate)));
+            }, () => this.installUpdates(), currentUpdate),
+            renderNoUpdateAvailable(noUpdatesAvailableVisible, () => {
+                this.setState({
+                    noUpdatesAvailableVisible: false
+                });
+            }),
+            renderError(errorVisible, () => {
+                this.setState({
+                    errorVisible: false
+                });
+            }, error)));
     }
 }
 exports.UpdateCenterUI = UpdateCenterUI;

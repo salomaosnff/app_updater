@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { Platform } from "react-native";
-import { UpdateObject, UpdateCenterRepository, AgentInfo } from "@update-center/common";
+import { UpdateObject, UpdateCenterRepository, AgentInfo, UpdateError } from "@update-center/common";
 import { UpdateCenterClient } from "./Client";
 
 export interface ClientUIProps {
@@ -8,7 +8,12 @@ export interface ClientUIProps {
   renderUpdateAvailable: (
     visible: boolean,
     close: Function,
-    update?: UpdateObject
+    install: Function,
+    update?: UpdateObject,
+  ) => Component;
+  renderNoUpdateAvailable: (
+    visible: boolean,
+    close: Function,
   ) => Component;
   renderDownloading: (
     visible: boolean,
@@ -19,12 +24,13 @@ export interface ClientUIProps {
   renderRestartNow: (
     visible: boolean,
     close: Function,
+    restart: Function,
     update?: UpdateObject
   ) => Component;
   renderError: (
     visible: boolean,
     close: Function,
-    error?: Error,
+    error: Error,
     update?: UpdateObject
   ) => Component;
 }
@@ -32,6 +38,7 @@ export interface ClientUIProps {
 export interface ClientUIState {
   checkUpdatesVisible: boolean;
   updateAvailableVisible: boolean;
+  noUpdatesAvailableVisible: boolean,
   downloadingVisible: boolean;
   restartNowVisible: boolean;
   errorVisible: boolean;
@@ -87,43 +94,74 @@ export class UpdateCenterUI extends Component<ClientUIProps, ClientUIState> {
   }
 
   async checkUpdates (dialog = true) {
-    this.setState({
-      checkUpdatesVisible: dialog
-    })
+    try {
+      this.setState({
+        checkUpdatesVisible: dialog
+      })
 
-    const update = await UpdateCenterUI.client.checkUpdates()
-    
-    this.setState({
-      checkUpdatesVisible: false,
-      updateAvailableVisible: !!update,
-      currentUpdate: update
-    })
+      const update = await UpdateCenterUI.client.checkUpdates()
+      
+      this.setState({
+        checkUpdatesVisible: false,
+        updateAvailableVisible: !!update,
+        noUpdatesAvailableVisible: !update,
+        currentUpdate: update
+      })
+    } catch (err) {
+      this.setState({
+        checkUpdatesVisible: false,
+        updateAvailableVisible: false,
+        noUpdatesAvailableVisible: false,
+        currentUpdate: null,
+        error: new UpdateError('Failed to check for updates', 'CHECKUPDATES_FAIL', err),
+        errorVisible: true
+      })
+    }
   }
 
   async installUpdates (dialog = true) {
-    this.setState({
-      downloadingVisible: dialog
-    })
-
-    await UpdateCenterUI.client.install(this.state.currentUpdate, p => {
+    try {
       this.setState({
-        currentProgress: p.bytesWritten / p.contentLength
+        downloadingVisible: dialog
       })
-    })
-    
-    this.setState({
-      downloadingVisible: false,
-      currentUpdate: null,
-      updateAvailableVisible: false,
-      restartNowVisible: dialog
-    })
+  
+      await UpdateCenterUI.client.install(this.state.currentUpdate, p => {
+        this.setState({
+          currentProgress: p.bytesWritten / p.contentLength
+        })
+      })
+      
+      this.setState({
+        downloadingVisible: false,
+        currentUpdate: null,
+        updateAvailableVisible: false,
+        restartNowVisible: dialog
+      })
+    } catch (error) {
+      this.setState({
+        downloadingVisible: false,
+        currentUpdate: null,
+        updateAvailableVisible: false,
+        restartNowVisible: false,
+        error: new UpdateError('Failed to install updates', 'INSTALL_FAILED', error),
+        errorVisible: true
+      })
+    }
   }
 
   async restart (force = true) {
-    if (!force) return UpdateCenterUI.client.restart()    
-    this.setState({
-      restartNowVisible: true
-    })
+    try {
+      if (!force) return UpdateCenterUI.client.restart()    
+      this.setState({
+        restartNowVisible: true
+      })
+    } catch (error) {
+      this.setState({
+        restartNowVisible: false,
+        error: new UpdateError('Failed to install updates', 'RESTART_FAILED', error),
+        errorVisible: true
+      })
+    }
   }
 
   render() {
@@ -133,7 +171,8 @@ export class UpdateCenterUI extends Component<ClientUIProps, ClientUIState> {
       renderDownloading,
       renderError,
       renderRestartNow,
-      renderUpdateAvailable
+      renderUpdateAvailable,
+      renderNoUpdateAvailable
     } = this.props;
     const {
       checkUpdatesVisible,
@@ -143,7 +182,8 @@ export class UpdateCenterUI extends Component<ClientUIProps, ClientUIState> {
       errorVisible,
       error,
       restartNowVisible,
-      updateAvailableVisible
+      updateAvailableVisible,
+      noUpdatesAvailableVisible
     } = this.state;
     return (
       <Fragment>
@@ -180,6 +220,7 @@ export class UpdateCenterUI extends Component<ClientUIProps, ClientUIState> {
               restartNowVisible: false
             });
           },
+          () => this.restart(true),
           currentUpdate
         )}
         {renderUpdateAvailable(
@@ -189,7 +230,25 @@ export class UpdateCenterUI extends Component<ClientUIProps, ClientUIState> {
               updateAvailableVisible: false
             });
           },
+          () => this.installUpdates(),
           currentUpdate
+        )}
+        {renderNoUpdateAvailable(
+          noUpdatesAvailableVisible,
+          () => {
+            this.setState({
+              noUpdatesAvailableVisible: false
+            });
+          }
+        )}
+        {renderError(
+          errorVisible,
+          () => {
+            this.setState({
+              errorVisible: false
+            });
+          },
+          error
         )}
       </Fragment>
     );

@@ -4,4 +4,5 @@ function __export(m) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./Util"));
+__export(require("./UpdateError"));
 //# sourceMappingURL=index.js.map

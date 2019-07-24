@@ -3,14 +3,16 @@ import { UpdateObject, UpdateCenterRepository, AgentInfo } from "@update-center/
 import { UpdateCenterClient } from "./Client";
 export interface ClientUIProps {
     renderCheckUpdates: (visible: boolean, close: Function) => Component;
-    renderUpdateAvailable: (visible: boolean, close: Function, update?: UpdateObject) => Component;
+    renderUpdateAvailable: (visible: boolean, close: Function, install: Function, update?: UpdateObject) => Component;
+    renderNoUpdateAvailable: (visible: boolean, close: Function) => Component;
     renderDownloading: (visible: boolean, close: Function, update?: UpdateObject, progress?: number) => Component;
-    renderRestartNow: (visible: boolean, close: Function, update?: UpdateObject) => Component;
-    renderError: (visible: boolean, close: Function, error?: Error, update?: UpdateObject) => Component;
+    renderRestartNow: (visible: boolean, close: Function, restart: Function, update?: UpdateObject) => Component;
+    renderError: (visible: boolean, close: Function, error: Error, update?: UpdateObject) => Component;
 }
 export interface ClientUIState {
     checkUpdatesVisible: boolean;
     updateAvailableVisible: boolean;
+    noUpdatesAvailableVisible: boolean;
     downloadingVisible: boolean;
     restartNowVisible: boolean;
     errorVisible: boolean;
