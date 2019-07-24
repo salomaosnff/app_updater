@@ -1,8 +1,8 @@
 import {
   UpdateObject,
-  IUpdateCenterClient,
   UpdateCenterClientConfig,
-  UpdateCenterRepository
+  UpdateCenterRepository,
+  IUpdateCenterClient
 } from "@update-center/common";
 
 import {
