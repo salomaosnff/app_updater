@@ -1,6 +1,6 @@
 {
   "name": "@update-center/json-storage",
-  "version": "0.1.8-alpha.4",
+  "version": "0.1.8",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -14,8 +14,8 @@
     "tsc": "rimraf dist && tsc"
   },
   "dependencies": {
-    "@update-center/common": "^0.1.8-alpha.4",
-    "@update-center/core": "^0.1.8-alpha.4",
+    "@update-center/common": "^0.1.8",
+    "@update-center/core": "^0.1.8",
     "express": "^4.17.1",
     "multer": "^1.4.2"
   },
